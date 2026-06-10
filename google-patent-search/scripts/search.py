@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+# 跨平台：确保非 ASCII（中文/emoji）输出在 Windows GBK 控制台不崩溃
 import sys
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+
 import argparse
 import json
 import urllib.parse
@@ -56,7 +63,9 @@ def build_xhr_url(query: str, page: int = 0) -> str:
 
 def build_browser_actions(needs_confirmation: bool) -> list[str]:
     steps = [
-        'Open advanced_url in Codex browser tools.',
+        '[优先] 使用 xhr_search.py（纯 HTTP、无需浏览器）。仅当 XHR 路径失败时才用浏览器回退。',
+        '[无头强制] 若必须用浏览器：一律以无头模式（headless=True）后台运行，禁止弹出可视窗口、禁止 page.pause()。',
+        'Open advanced_url in headless browser tools.',
         'Fill advanced_fields into the Google Patents advanced search form.',
     ]
     if needs_confirmation:

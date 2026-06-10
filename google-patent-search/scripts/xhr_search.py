@@ -15,6 +15,8 @@ Rate-limiting:  Google returns HTTP 503 after ~5 rapid requests.
 Callers should wait ≥30 s between searches or implement retry logic.
 """
 
+from __future__ import annotations
+
 # 跨平台：确保非 ASCII（中文/emoji）输出在 Windows GBK 控制台不崩溃
 import sys as _sys
 try:
@@ -22,7 +24,6 @@ try:
     _sys.stderr.reconfigure(encoding='utf-8')
 except Exception:
     pass
-from __future__ import annotations
 
 import json
 import re

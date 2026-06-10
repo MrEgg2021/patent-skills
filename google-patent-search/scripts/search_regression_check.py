@@ -11,6 +11,7 @@ sys.dont_write_bytecode = True
 from convert_to_xlsx import load_results
 from parse_results import build_output, parse_input
 from search import build_automation_payload
+import xhr_search
 
 
 def assert_true(condition: bool, message: str) -> None:
@@ -81,11 +82,21 @@ wherein the machine learning model instructions comprise at least one of supervi
         assert_true(xlsx_path.exists(), 'xlsx export smoke file should exist')
 
 
+def run_xhr_search_smoke_case() -> None:
+    """冒烟：保证 xhr_search 可 import 且核心纯函数行为正确。
+    （此用例专为防止 import/语法层错误溜过——纯函数，不触发网络请求）"""
+    assert_true(xhr_search._strip_html_tags('<b>ML</b> system') == 'ML system', 'strip_html_tags should remove tags')
+    assert_true(xhr_search._extract_country('CN107390684B') == 'CN', 'extract_country should derive CN')
+    assert_true(xhr_search._extract_country('US123') == 'US', 'extract_country should derive US')
+    assert_true('q%3D' in xhr_search._build_xhr_url('robot'), 'build_xhr_url should URL-encode query')
+
+
 def main() -> None:
     run_query_mode_case()
     run_technical_description_case()
     run_alias_confirmation_case()
     run_parse_and_export_case()
+    run_xhr_search_smoke_case()
     print('google-patent-search search regression checks passed')
 
 
