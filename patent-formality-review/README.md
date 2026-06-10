@@ -56,7 +56,7 @@ parsed_doc = parser.parse()
 
 # 2. 执行 A 类自动扫描（指定目标保护中心）
 scanner = FormalityScanner(parsed_doc, target_center="安徽")
-results = scanner.scan_all()
+results = scanner.run_all()
 
 # 3. 查看结果
 for r in results:

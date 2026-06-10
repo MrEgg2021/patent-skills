@@ -579,9 +579,9 @@ class DocxSectionParser:
                 cx = extent.get('cx')
                 cy = extent.get('cy')
                 if cx:
-                    width_pt = int(cx) / 914400  # EMU to points
+                    width_pt = int(cx) / 12700  # EMU → pt (1pt = 12700 EMU)
                 if cy:
-                    height_pt = int(cy) / 914400
+                    height_pt = int(cy) / 12700
 
             return ImageInfo(
                 index=index,

@@ -56,7 +56,7 @@ parsed_doc = parser.parse()
 
 # 2. Run Type-A automated scan (specify target center)
 scanner = FormalityScanner(parsed_doc, target_center="Anhui")
-results = scanner.scan_all()
+results = scanner.run_all()
 
 # 3. View results
 for r in results:

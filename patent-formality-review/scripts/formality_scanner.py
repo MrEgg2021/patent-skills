@@ -97,7 +97,7 @@ CENTER_DISPUTE_CONFIG = {
 
     # ── 独有型 ──
     "F-5": {"type": "unique", "required_by": ["山西"]},            # 摘要不得使用标题
-    "F-6": {"type": "unique", "required_by": ["湖北"]},            # 摘要以句号结尾
+    # F-6（摘要以句号结尾）已改为统一要求，从分歧配置移除（用户2026-06-10确认）
     "F-46": {"type": "unique", "required_by": ["陕西"]},           # 附图标记不得复杂
     "F-60": {"type": "unique", "required_by": ["山西"]},           # 禁止沟通用语
     "F-62": {"type": "unique", "required_by": ["合肥"]},           # 禁止QUOTE/本地路径
@@ -120,6 +120,33 @@ CENTER_DISPUTE_CONFIG = {
     "F-31": {"type": "partial", "required_by": ["合肥"]},                       # 引证公开出版物
     "F-34": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古"]},     # 多余空行等
 }
+
+# ══════════════════════════════════════════════════════════════════
+# 中心精确映射表（2026-06-10 全中心规则汇总落地）
+# ══════════════════════════════════════════════════════════════════
+
+# 发明名称字数: 审查指南原文=通则25字、化学领域40字。60字非指南原文,极个别中心自加。
+NAME_LENGTH_DEFAULT = (25, 40)  # (通则, 化学领域)
+NAME_RELAXED_60 = frozenset(["重庆", "吉林", "苏州", "辽宁", "福建", "陕西"])
+
+# 附图颜色(互斥维度)
+FIGURE_COLOR_STRICT = frozenset(["内蒙古", "苏州", "常州", "合肥", "成都", "四川", "湖北", "山西", "陕西", "辽宁", "西安"])
+FIGURE_COLOR_LENIENT = frozenset(["北京", "吉林", "济南"])
+FIGURE_COLOR_SPLIT = frozenset(["湘潭", "长沙"])  # 发明可彩/实用新型禁
+
+# 摘要字数(多数300;青岛/天津特殊计字)
+ABSTRACT_CHAR_RULE = {"青岛": "字母按1字符", "天津": "字母按1字符"}
+
+# 附图清晰度(明文要求"缩2/3仍清晰")
+FIGURE_CLARITY_STRICT = frozenset(["陕西", "青岛", "浙江", "辽宁", "大连", "天津"])
+
+# 已覆盖中心(约30个,2026-06-10全中心汇总)
+COVERED_CENTERS = frozenset([
+    "吉林", "徐州", "浙江", "北京", "山西", "甘肃", "长沙", "长春",
+    "福建", "西安", "内蒙古", "陕西", "安徽", "辽宁", "湖北", "合肥",
+    "常州", "苏州", "天津", "广州", "重庆", "青岛", "新乡", "湘潭",
+    "洛阳", "南昌", "湖南", "大连", "无锡", "成都", "济南", "四川",
+])
 
 
 def match_center(user_input: str) -> Optional[str]:
@@ -161,11 +188,16 @@ def get_center_verdict(rule_id: str, target_center: str) -> str:
         return "normal"  # 无差异项
 
     ctype = config["type"]
+    # 最严格模式：未指定中心或未覆盖中心（match_center 返回 None 时上游传入"最严格模式"）
+    # 此模式下独有项(unique/partial)按最严判定为 🔴，确保提交到任何中心都不被退回。
+    is_strictest = target_center in ("", "最严格模式") or target_center is None
 
     if ctype == "unique":
         required_by = config["required_by"]
         if target_center in required_by:
             return "mandatory"
+        if is_strictest:
+            return "strict_default"   # 最严格模式：独有项也按🔴
         return "suggestion"
 
     elif ctype == "mutual_exclusive":
@@ -176,7 +208,7 @@ def get_center_verdict(rule_id: str, target_center: str) -> str:
         elif target_center in lenient_side:
             return "lenient"
         else:
-            # 未提及的中心，取默认
+            # 未提及的中心 / 最严格模式，取默认（默认严格）
             if config.get("default_strict", True):
                 return "strict_default"
             return "suggestion"
@@ -194,6 +226,8 @@ def get_center_verdict(rule_id: str, target_center: str) -> str:
         required_by = config.get("required_by", [])
         if target_center in required_by:
             return "mandatory"
+        if is_strictest:
+            return "strict_default"   # 最严格模式：partial 项也按🔴
         return "suggestion"
 
     return "normal"
@@ -335,8 +369,7 @@ class FormalityScanner:
     def _check_F5(self, sec):
         """F-5: 摘要不得使用标题"""
         verdict = get_center_verdict("F-5", self.target_center)
-        if verdict == "suggestion":
-            return  # 非所选中心要求，跳过自动检查
+        # suggestion 不再跳过：查出来标💡建议关注（计入补充提示区），见下方 severity 判定
 
         # 检查摘要section首段是否为标题行（短+居中+加粗）
         if sec.paragraphs:
@@ -353,21 +386,16 @@ class FormalityScanner:
                 )
 
     def _check_F6(self, sec, text):
-        """F-6: 摘要应以句号结尾"""
-        verdict = get_center_verdict("F-6", self.target_center)
-        if verdict == "suggestion":
-            return
-
+        """F-6: 摘要应以句号结尾（统一要求，所有中心适用 — 用户2026-06-10确认）"""
         # 去除尾部空白后检查最后一个字符
         stripped = text.rstrip()
         if stripped and stripped[-1] not in '。':
-            severity = "must_fix" if verdict in ("mandatory", "strict_default") else "suggestion"
             self._add_issue(
-                "F-6", severity, "摘要",
+                "F-6", "must_fix", "摘要",
                 f"摘要未以句号结尾（最后字符：'{stripped[-1]}'）",
                 suggestion="在摘要末尾添加句号",
-                source_centers="湖北",
-                dispute_note="仅湖北中心明确要求摘要以句号结尾" if verdict != "mandatory" else "",
+                source_centers="统一要求（全部中心）",
+                center_verdict="normal",
             )
 
     def _check_F10(self, sec, text, section_name):
@@ -399,8 +427,9 @@ class FormalityScanner:
                 actual_issues.append(m)
 
             if actual_issues:
+                rule = "F-10" if section_name == '摘要' else ("F-33" if section_name == '权利要求书' else "F-55")
                 self._add_issue(
-                    "F-10" if section_name == '摘要' else "F-55",
+                    rule,
                     "must_fix", section_name,
                     f"{section_name}中出现'{wrong}'，但专利类型为{self.parsed.patent_type}",
                     detail=f"发现{len(actual_issues)}处'{wrong}'用语",
@@ -605,25 +634,26 @@ class FormalityScanner:
             )
 
     def _check_F23(self, sec, text):
-        """F-23: 附图标记加括号"""
-        # 在权利要求中查找不在括号内的附图标记
-        # 模式：中文字符后紧跟的数字（不在括号内）
+        """F-23: 附图标记加括号（收窄正则，降低软件/算法案误报）"""
         issues = []
-        for m in re.finditer(r'[\u4e00-\u9fff](\d{2,4})(?![\d年月日号个倍%％米秒克瓦伏安兆])', text):
+        for m in re.finditer(r'[一-鿿](\d{2,4})(?![\d年月日号个倍%％米秒克瓦伏安兆℃°步版层位维次帧批轮])', text):
             num_str = m.group(1)
+            # 排除步骤编号/版本号/层数等常见非标记上下文
+            pre_start = max(0, m.start() - 4)
+            pre_ctx = text[pre_start:m.start() + 1]
+            if re.search(r'[S第步层版]$|实施例|阈值|步骤|第\d', pre_ctx):
+                continue
             try:
                 num = int(num_str)
                 if 10 <= num <= 9999:
-                    # 检查前面是否是括号
-                    start = m.start()
-                    if start > 0 and text[start-1] in '（(':
+                    start_pos = m.start()
+                    if start_pos > 0 and text[start_pos - 1] in '（(':
                         continue
                     issues.append(num_str)
             except ValueError:
                 pass
 
         if issues:
-            # 去重
             unique_issues = list(dict.fromkeys(issues))
             self._add_issue(
                 "F-23", "should_fix", "权利要求书",
@@ -873,8 +903,7 @@ class FormalityScanner:
     def _check_F62(self, sec, text):
         """F-62: 禁止QUOTE/本地路径"""
         verdict = get_center_verdict("F-62", self.target_center)
-        if verdict == "suggestion":
-            return
+        # suggestion 不再跳过：查出来标💡建议关注（计入补充提示区）
 
         matches = self.TEMPLATE_RESIDUE.findall(text)
         # 过滤掉"在此处键入"（已在F-61检查）
