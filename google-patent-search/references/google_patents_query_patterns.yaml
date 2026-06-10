@@ -1,0 +1,74 @@
+version: "2026-03-17"
+source_level: internal_design_rule
+default_query_set_limit: 3
+pattern_families:
+  core_strict:
+    use_when: "First pass. Keep the query short and relevance-friendly."
+    allowed_operators:
+      - AND
+      - quotes
+      - "inventor:"
+      - "assignee:"
+      - "country:"
+      - "status:"
+      - "language:"
+      - "after:"
+      - "before:"
+    max_synonyms_per_concept: 1
+    max_clause_depth: 2
+    risk_note: "May miss broader concept variants."
+  balanced:
+    use_when: "Second pass when the first query is too narrow."
+    allowed_operators:
+      - AND
+      - OR
+      - quotes
+      - TI=
+      - AB=
+      - "inventor:"
+      - "assignee:"
+      - "country:"
+      - "status:"
+      - "language:"
+      - "after:"
+      - "before:"
+    max_synonyms_per_concept: 2
+    max_clause_depth: 3
+    risk_note: "Balanced recall and precision."
+  recall_fallback:
+    use_when: "Third pass when broader recall is needed."
+    allowed_operators:
+      - AND
+      - OR
+      - quotes
+      - TI=
+      - AB=
+      - CL=
+      - "inventor:"
+      - "assignee:"
+      - "country:"
+      - "status:"
+      - "language:"
+      - "after:"
+      - "before:"
+      - AROUND(n)
+      - wildcard
+    max_synonyms_per_concept: 3
+    max_clause_depth: 4
+    risk_note: "Highest recall. Review results manually before downstream export."
+entity_rules:
+  alias_confirmation_policy: "always_confirm_when_expanded"
+  company_alias_strategy:
+    - original user input
+    - user-supplied alias candidates
+    - public-name lookup
+    - confirm selected aliases before final query generation
+  inventor_alias_strategy:
+    - original user input
+    - user-supplied alias candidates
+    - public-name lookup
+    - confirm selected aliases before final query generation
+non_goals:
+  - "Do not generate giant deeply nested Boolean queries by default."
+  - "Do not expand every query to professional-search depth."
+  - "Do not send full technical disclosures to external services."
