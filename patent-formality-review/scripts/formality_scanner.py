@@ -9,6 +9,13 @@
 含中心选择判定逻辑：根据target_center参数调整分歧项/独有项的判定标准。
 """
 
+# 跨平台：确保非 ASCII（中文/emoji）输出在 Windows GBK 控制台不崩溃
+import sys as _sys
+try:
+    _sys.stdout.reconfigure(encoding='utf-8')
+    _sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 import re
 import json
 import sys

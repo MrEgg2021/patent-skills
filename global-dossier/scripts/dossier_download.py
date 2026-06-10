@@ -6,6 +6,13 @@ Usage:
   python3 dossier_download.py --number US11922587 --mode family
 """
 
+# 跨平台：确保非 ASCII（中文/emoji）输出在 Windows GBK 控制台不崩溃
+import sys as _sys
+try:
+    _sys.stdout.reconfigure(encoding='utf-8')
+    _sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 import argparse, os, re, sys, time, zipfile
 from playwright.sync_api import sync_playwright
 

@@ -55,4 +55,4 @@ for section in doc.sections:
 1. **不要用 pandoc 生成带表格的报告** → 表格无边框
 2. **不要用 docx-js 生成中文报告** → 书名号/引号触发 JS 语法错误
 3. **python-docx 是首选** → `import docx`，不是 `python-docx`
-4. **完成立即发送** → `send_message` + `MEDIA:` 交付，不留本地路径让用户自己取
+4. **完成立即交付** → 生成后立即把 .docx 交付给用户，不留本地路径让用户自己取（交付通道由运行环境决定）

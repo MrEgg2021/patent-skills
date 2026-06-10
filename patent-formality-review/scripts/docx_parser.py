@@ -12,6 +12,13 @@ DOCX分节解析器 — 专利申请初稿形式审查
 提取各部分文本、附图标记、图片、表格、公式等结构化数据。
 """
 
+# 跨平台：确保非 ASCII（中文/emoji）输出在 Windows GBK 控制台不崩溃
+import sys as _sys
+try:
+    _sys.stdout.reconfigure(encoding='utf-8')
+    _sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 import re
 import sys
 from dataclasses import dataclass, field
