@@ -1,0 +1,12 @@
+{
+  "source": "D:/case/scan.pdf",
+  "service": "precision",
+  "profile": "patent-application",
+  "language": "ch",
+  "model_version": "vlm",
+  "ocr_mode": "ocr",
+  "page_ranges": "1-50",
+  "extra_formats": ["docx", "html"],
+  "output_dir": "D:/case/ocr-output",
+  "secret_note": "Do not put MinerU token in this file. Set MINERU_API_TOKEN in the shell instead."
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "type": "text",
+    "text": "一种耐磨胶底材料",
+    "page_idx": 0
+  },
+  {
+    "type": "table",
+    "text": "橡胶基体 100重量份",
+    "page_idx": 0
+  },
+  {
+    "type": "image",
+    "img_path": "images/fig1.png",
+    "page_idx": 1
+  },
+  {
+    "type": "page_number",
+    "text": "1",
+    "page_idx": 0
+  }
+]
