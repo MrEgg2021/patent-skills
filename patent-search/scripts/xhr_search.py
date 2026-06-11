@@ -77,6 +77,16 @@ def _extract_country(pub_number: str) -> str:
     return m.group(1) if m else ""
 
 
+def _query_has_country_cn(query: str) -> bool:
+    return "COUNTRY:CN" in query.upper()
+
+
+def _is_cn_publication(patent: dict[str, Any]) -> bool:
+    pub_num = str(patent.get("publication_number") or "").upper()
+    country = str(patent.get("country") or _extract_country(pub_num)).upper()
+    return country == "CN" or pub_num.startswith("CN")
+
+
 def _build_xhr_url(query: str, page: int = 0) -> str:
     """Build the full XHR/query URL from a Google Patents query string.
 
@@ -285,11 +295,10 @@ def xhr_search_cn(
     """
     if mode == "filter":
         # Append country:CN if not already present
-        if "country:CN" not in query.upper() and "COUNTRY:CN" not in query:
+        if not _query_has_country_cn(query):
             query = f"{query} country:CN"
     result = xhr_search(query, proxy_url=proxy_url, page=page, **kwargs)
-    if mode == "post":
-        result["patents"] = [p for p in result["patents"] if p.get("country") == "CN"]
+    result["patents"] = [p for p in result["patents"] if _is_cn_publication(p)]
     return result
 
 
@@ -328,7 +337,7 @@ def xhr_multi_search(
             continue
 
         if cn_only:
-            if cn_mode == "filter" and "country:CN" not in query.upper():
+            if cn_mode == "filter" and not _query_has_country_cn(query):
                 query = f"{query} country:CN"
 
         print(f"  [xhr_multi_search] {strategy}: {query[:80]}…")
@@ -342,7 +351,7 @@ def xhr_multi_search(
 
         for patent in result.get("patents", []):
             pub_num = patent.get("publication_number", "")
-            if cn_only and cn_mode == "post" and patent.get("country") != "CN":
+            if cn_only and not _is_cn_publication(patent):
                 continue
             if pub_num and pub_num in seen_pub_nums:
                 continue
@@ -382,7 +391,7 @@ def main() -> None:
     parser.add_argument("--cn-mode", choices=["filter", "post"], default="filter",
                         help="How to filter CN patents: 'filter' (country:CN in query) or 'post' (client-side filter).")
     parser.add_argument("--page", type=int, default=0, help="Zero-based page number.")
-    parser.add_argument("--output", default="", help="Output JSON path (default: stdout).")
+    parser.add_argument("-o", "--output", default="", help="Output JSON path (default: stdout).")
     parser.add_argument("--max-results", type=int, default=50, help="Max results per strategy in multi-search.")
     args = parser.parse_args()
 
