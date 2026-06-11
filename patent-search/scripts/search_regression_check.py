@@ -97,7 +97,7 @@ def main() -> None:
     run_alias_confirmation_case()
     run_parse_and_export_case()
     run_xhr_search_smoke_case()
-    print('google-patent-search search regression checks passed')
+    print('patent-search search regression checks passed')
 
 
 if __name__ == '__main__':

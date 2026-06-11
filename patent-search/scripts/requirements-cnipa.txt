@@ -1,0 +1,3 @@
+# CNIPA 公布站检索（Mode D）依赖
+# 安装：pip install -r requirements-cnipa.txt && python -m playwright install chromium
+playwright

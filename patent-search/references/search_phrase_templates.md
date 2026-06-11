@@ -1,6 +1,6 @@
 # Search Phrase Templates
 
-These templates are internal helper patterns for `google-patent-search`.
+These templates are internal helper patterns for `patent-search`.
 
 ## Design rule
 

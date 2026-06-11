@@ -20,13 +20,13 @@ metadata:
 
 ## 定位
 
-| | google-patent-search | **global-dossier** |
+| | patent-search | **global-dossier** |
 |---|---|---|
 | 数据层 | 公开文本（PDF/DOCX/HTML） | **审查历史**（OA、答复、IDS、检索报告） |
 | 数据源 | Google Patents | USPTO Global Dossier |
 | 产出 | 专利全文 | 审查文件包 |
 
-> **简单记**：想看专利写什么 → google-patent-search；想看审查员怎么审的 → global-dossier。
+> **简单记**：想看专利写什么 → patent-search；想看审查员怎么审的 → global-dossier。
 > **边界**：想下载审查历史文件 → global-dossier；想写 OA 答复/意见陈述/修改权利要求 → oa-response。
 
 ---
@@ -134,13 +134,13 @@ python3 scripts/dossier_download.py --number CN116621800B --mode family
 
 ---
 
-## 与 google-patent-search 的协作
+## 与 patent-search 的协作
 
 ```
 用户请求 → 判断要什么
-  ├── 公开文本（PDF/全文） → google-patent-search Mode B
+  ├── 公开文本（PDF/全文） → patent-search Mode B
   ├── 审查历史（OA/答复/IDS） → global-dossier Mode A/B
-  └── 两者都要 → 先用 google-patent-search 拿全文，再用 global-dossier 拿审查历史
+  └── 两者都要 → 先用 patent-search 拿全文，再用 global-dossier 拿审查历史
 ```
 
 ---

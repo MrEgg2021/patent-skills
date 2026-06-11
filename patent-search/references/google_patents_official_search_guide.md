@@ -1,6 +1,6 @@
 # Google Patents Official Search Guide
 
-This file freezes the official search facts used by the `google-patent-search` skill.
+This file freezes the official search facts used by the `patent-search` skill.
 
 ## Sources
 

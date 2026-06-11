@@ -17,7 +17,7 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-SKILL_NAME = 'google-patent-search'
+SKILL_NAME = 'patent-search'
 RESERVED_KEYS = {
     'skill_name',
     'timestamp',
@@ -435,7 +435,7 @@ def build_required_inputs(answers: dict[str, Any], detail_input_mode: str) -> di
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Skill-local file ingestion for google-patent-search detail mode')
+    parser = argparse.ArgumentParser(description='Skill-local file ingestion for patent-search detail mode')
     parser.add_argument('--answers')
     parser.add_argument('--answers-file')
     parser.add_argument('--context')

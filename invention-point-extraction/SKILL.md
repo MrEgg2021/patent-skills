@@ -1,6 +1,6 @@
 ---
 name: invention-point-extraction
-description: 专利发明点解析。从专利说明书全文提取核心技术发明点，输出结构化 xlsx 表格。独立使用，也可被 google-patent-search Mode C 调用做预处理。
+description: 专利发明点解析。从专利说明书全文提取核心技术发明点，输出结构化 xlsx 表格。独立使用，也可被 patent-search Mode C 调用做预处理。
 metadata:
   triggers:
     - 发明点
@@ -81,12 +81,12 @@ python3 scripts/json_to_xlsx.py invention_points.json 发明点解析.xlsx
 - `技术问题` / `技术方案` 为字符串或数组
 - 旧字段：`文件名称`、`发明点`（含"技术问题/技术方案"文本）自动映射
 
-## 作为 google-patent-search 预处理
+## 作为 patent-search 预处理
 
 被 Mode C 调用时：
 ```
 专利文本 → invention-point-extraction → xlsx 中的技术问题+方案
-  → 拼接为 technical_description_text → google-patent-search Mode A
+  → 拼接为 technical_description_text → patent-search Mode A
 ```
 
 ## 工作目录

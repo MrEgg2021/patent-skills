@@ -1,6 +1,6 @@
 ---
-name: google-patent-search
-description: Google Patents 语义搜索与专利直取。模式A：输入技术描述自动拆解为检索式；模式B：按公开号直接下载PDF+Word；模式C：调用 invention-point-extraction 从已有专利搜相似。
+name: patent-search
+description: 多源专利检索与直取。Google Patents（主力）+ 国家知识产权局公布公告站（中文原生补充）。模式A：英文XHR语义检索（CN专利可用）；模式B：按公开号下载PDF+Word；模式C：从已有专利搜相似；模式D：国知局公布站中文原生检索（免翻译、官方源）。触发词：专利检索、查专利、搜专利、下载专利、google patent、patent search。
 metadata:
   triggers:
     - 谷歌专利
@@ -12,19 +12,25 @@ metadata:
     - 下载专利
     - patent search
     - patent download
+    - 国知局检索
+    - 中文专利检索
+    - cnipa
 ---
 
-# Google Patents 语义搜索与直取
+# 多源专利检索与直取
 
-## 三种用法
+数据源：**Google Patents**（Mode A/B/C，主力）+ **国家知识产权局专利公布公告系统**（Mode D，中文原生/官方源补充）。
+
+## 四种用法
 
 | 用法 | 场景 | 输入 | 实际流程 | 交付物 |
 |------|------|------|----------|--------|
-| **A 语义搜索** | "帮我找关于XXX的专利" | 技术描述 / 关键词 | 拆概念 → 检索式 → 结果 | **xlsx 表格**（默认） |
+| **A 语义搜索** | "帮我找关于XXX的专利" | 技术描述 / 关键词 | 拆概念 → 英文检索式 → XHR → 结果 | **xlsx 表格**（默认） |
 | **B 直接抓取** | "把CN123456A下下来" | 公开号 | 抓取 → PDF + Word | PDF + Word |
 | **C 从专利搜相似** | "这篇专利有什么相近的？" | PDF/Word文件 / 公开号 | 提取文本 → 送入模式A | xlsx 表格 |
+| **D 国知局中文检索** | 需中文原生检索/官方源/Google索引不足 | 中文检索词 | 国知局公布站 → JSON | JSON 命中表 |
 
-> **交付原则**：搜索结果一律输出 xlsx 表格文件，用户可直接打开查看。表格包含公开号、标题、摘要、申请日、发明人、Google Patents 链接等标准字段。
+> **交付原则**：A/C 搜索结果一律输出 xlsx 表格文件。表格包含公开号、标题、摘要、申请日、发明人、Google Patents 链接等标准字段。
 
 ---
 
@@ -173,6 +179,42 @@ python scripts/export_artifacts.py --context-file ingest_out.json --output-dir .
 
 ---
 
+## 模式 D — 国知局公布站中文检索
+
+直接用中文术语检索国家知识产权局专利公布公告系统，免翻译、官方源。
+
+### 何时用 Mode D 而非 Mode A
+
+- 需中文原生检索（不想把术语翻译成英文）
+- 需国知局官方数据源（最权威）
+- Google 索引滞后或缺失最新中国公开时
+
+### 用法
+
+```bash
+# 一段一查，每轮只传一个语义检索单位
+python scripts/cnipa_epub_search.py 单克隆抗体
+python scripts/cnipa_epub_search.py 抗体药物偶联物
+```
+
+- 取 stdout 唯一一行 `EPUB_HITS_JSON:` 后的 JSON 数组，按 `pub_number` 去重合并。
+- 不要拆成过碎单字或泛义双字，不要把无关词硬凑整句。
+- 依赖 Playwright（首次安装）：
+
+```bash
+pip install -r scripts/requirements-cnipa.txt && python -m playwright install chromium
+```
+
+### 降级
+
+WAF 超时 / 0 命中 / 无 Playwright → 退回 Mode A（英文 XHR）或 WebSearch。
+
+### 对用户表述
+
+说明数据库渠道名（"国家知识产权局专利公布公告系统"）+ 主要检索词；不暴露脚本名/Playwright/WAF 等实现细节。
+
+---
+
 ## 环境
 
 - Python ≥ 3.11
@@ -313,6 +355,7 @@ HTTP_PROXY="http://127.0.0.1:<port>" HTTPS_PROXY="http://127.0.0.1:<port>" curl 
 | **A 语义搜索** | ✅ 可用（XHR） | XHR 端点直接搜索，country:CN 可用、CN 专利正常出现。Playwright headless 作为 503 回退。 |
 | **B 直接抓取** | ✅ 可靠 | 详情页是服务端渲染的。**必须传 `proxy_url` 参数**，否则 SSL 错误。 |
 | **C 从专利搜相似** | ✅ 可用 | 提取发明点后走 XHR 搜索，country:CN 可用，CN 专利正常出现。 |
+| **D 国知局中文检索** | ✅ 可用（需 Playwright） | 国知局公布站中文原生检索，免翻译、官方源。依赖 Chromium 过 WAF（等待最长 180s），慢于 XHR；WAF 超时/0命中降级到 Mode A。 |
 
 ### 实践建议
 

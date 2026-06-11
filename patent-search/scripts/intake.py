@@ -11,7 +11,7 @@ from typing import Any
 
 sys.dont_write_bytecode = True
 
-SKILL_NAME = 'google-patent-search'
+SKILL_NAME = 'patent-search'
 SEARCH_MODE = 'search'
 DETAIL_MODE = 'detail'
 DATE_PATTERN = r'^\d{4}-\d{2}-\d{2}$'
