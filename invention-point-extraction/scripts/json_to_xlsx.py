@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-from openpyxl.styles import Alignment
+from openpyxl.styles import Alignment, Font, PatternFill
 
 
 OUTPUT_COLUMNS = ["专利公开号", "专利标题", "技术问题", "技术方案"]
@@ -60,7 +60,10 @@ def numbered(value: Any) -> str:
     if value is None:
         return ""
     if isinstance(value, list):
-        return "\n".join(f"{idx}. {str(item).strip()}" for idx, item in enumerate(value, 1) if str(item).strip())
+        items = [str(item).strip() for item in value if str(item).strip()]
+        if len(items) == 1:
+            return items[0]
+        return "\n".join(f"{idx}. {item}" for idx, item in enumerate(items, 1))
     if isinstance(value, dict):
         return json.dumps(value, ensure_ascii=False)
     return str(value).strip()
@@ -90,18 +93,23 @@ def split_invention_points(text: str) -> tuple[list[str], list[str]]:
     return problems, solutions
 
 
-def normalize_row(item: dict[str, Any]) -> dict[str, str]:
+def normalize_row(item: dict[str, Any], fallback_name: str) -> dict[str, str]:
     pub_no = (
         item.get("专利公开号")
         or item.get("公开号")
         or item.get("publication_number")
         or item.get("文件名称")
         or item.get("file_name")
-        or ""
+        or fallback_name
     )
-    title = item.get("专利标题") or item.get("标题") or item.get("title") or ""
+    title = item.get("专利标题") or item.get("标题") or item.get("title") or "（未识别）"
     problems = item.get("技术问题") or item.get("technical_problem")
     solutions = item.get("技术方案") or item.get("technical_solution")
+
+    error = item.get("解析失败") or item.get("error") or item.get("parse_error")
+    if error and not problems and not solutions:
+        problems = [f"解析失败：{error}"]
+        solutions = [f"解析失败：{error}"]
 
     if (not problems or not solutions) and item.get("发明点"):
         parsed_problems, parsed_solutions = split_invention_points(numbered(item.get("发明点")))
@@ -118,14 +126,24 @@ def normalize_row(item: dict[str, Any]) -> dict[str, str]:
 
 def autosize_and_wrap(writer: pd.ExcelWriter, sheet_name: str) -> None:
     worksheet = writer.sheets[sheet_name]
-    for column_cells in worksheet.columns:
-        letter = column_cells[0].column_letter
-        max_len = 10
-        for cell in column_cells:
-            text = "" if cell.value is None else str(cell.value)
-            max_len = max(max_len, min(80, max((len(line) for line in text.splitlines()), default=0)))
-            cell.alignment = Alignment(wrap_text=True, vertical="top")
-        worksheet.column_dimensions[letter].width = min(max_len + 4, 80)
+    worksheet.freeze_panes = "A2"
+
+    header_fill = PatternFill(fill_type="solid", fgColor="F2F2F2")
+    for header in worksheet[1]:
+        header.font = Font(bold=True)
+        header.fill = header_fill
+        header.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+    widths = {"A": 18, "B": 40, "C": 60, "D": 60}
+    for letter, width in widths.items():
+        worksheet.column_dimensions[letter].width = width
+
+    for row in worksheet.iter_rows(min_row=2):
+        for cell in row:
+            if cell.column_letter == "A":
+                cell.alignment = Alignment(horizontal="center", vertical="top", wrap_text=False)
+            else:
+                cell.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
 
 
 def main() -> None:
@@ -135,7 +153,8 @@ def main() -> None:
     parser.add_argument("--sheet-name", default="发明点解析")
     args = parser.parse_args()
 
-    rows = [normalize_row(item) for item in load_payload(Path(args.input))]
+    input_path = Path(args.input)
+    rows = [normalize_row(item, input_path.stem) for item in load_payload(input_path)]
     frame = pd.DataFrame(rows, columns=OUTPUT_COLUMNS)
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
