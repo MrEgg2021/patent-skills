@@ -72,7 +72,7 @@ CENTER_ALIASES = {
 # 分歧配置表：定义每个分歧/独有项的中心立场
 CENTER_DISPUTE_CONFIG = {
     # ── 数量型分歧 ──
-    "F-48": {  # 名称字数限制
+    "S-2": {  # 名称字数限制
         "type": "quantitative",
         "center_rules": {
             "陕西": 25, "合肥": 25,   # ≤25字
@@ -82,13 +82,13 @@ CENTER_DISPUTE_CONFIG = {
     },
 
     # ── 互斥型分歧 ──
-    "F-85": {  # 附图彩色
+    "D-12": {  # 附图彩色
         "type": "mutual_exclusive",
         "strict_side": ["山西", "陕西", "辽宁", "西安", "湖北", "四川", "常州"],
         "lenient_side": ["吉林", "长春", "苏州"],
         "default_strict": True,
     },
-    "F-85b": {  # 截图彩色
+    "D-12b": {  # 截图彩色
         "type": "mutual_exclusive",
         "strict_side": ["内蒙古"],
         "lenient_side": [],
@@ -96,29 +96,29 @@ CENTER_DISPUTE_CONFIG = {
     },
 
     # ── 独有型 ──
-    "F-5": {"type": "unique", "required_by": ["山西"]},            # 摘要不得使用标题
-    # F-6（摘要以句号结尾）已改为统一要求，从分歧配置移除（用户2026-06-10确认）
-    "F-46": {"type": "unique", "required_by": ["陕西"]},           # 附图标记不得复杂
-    "F-60": {"type": "unique", "required_by": ["山西"]},           # 禁止沟通用语
-    "F-62": {"type": "unique", "required_by": ["合肥"]},           # 禁止QUOTE/本地路径
-    "F-74": {"type": "unique", "required_by": ["山西"]},           # 保藏信息/序列表
-    "F-76": {"type": "unique", "required_by": ["合肥"]},            # 不含不宜公布/涉国防
-    "F-93": {"type": "unique", "required_by": ["辽宁"]},           # 同一附图相同比例
-    "F-94": {"type": "unique", "required_by": ["内蒙古"]},         # 附图竖向绘制方向
-    "F-95": {"type": "unique", "required_by": ["内蒙古"]},         # 禁止清晰人脸
-    "F-96": {"type": "unique", "required_by": ["内蒙古"]},         # 禁止二维码/条形码
-    "F-97": {"type": "unique", "required_by": ["内蒙古"]},         # 不完整地图
-    "F-98": {"type": "unique", "required_by": ["常州"]},           # 禁止照片作为附图
+    "AB-2": {"type": "unique", "required_by": ["山西"]},            # 摘要不得使用标题
+    # AB-3（摘要以句号结尾）已改为统一要求，从分歧配置移除（用户2026-06-10确认）
+    "D-17": {"type": "unique", "required_by": ["陕西"]},           # 附图标记不得复杂
+    "S-15": {"type": "unique", "required_by": ["山西"]},           # 禁止沟通用语
+    "S-8": {"type": "unique", "required_by": ["合肥"]},            # 禁止QUOTE/本地路径
+    "S-31": {"type": "unique", "required_by": ["山西"]},           # 保藏信息/序列表
+    "S-26": {"type": "unique", "required_by": ["合肥"]},           # 不含不宜公布/涉国防
+    "D-21": {"type": "unique", "required_by": ["辽宁"]},           # 同一附图相同比例
+    "D-20": {"type": "unique", "required_by": ["内蒙古"]},         # 附图竖向绘制方向
+    "D-14": {"type": "unique", "required_by": ["内蒙古"]},         # 禁止清晰人脸
+    "D-15": {"type": "unique", "required_by": ["内蒙古"]},         # 禁止二维码/条形码
+    "D-23": {"type": "unique", "required_by": ["内蒙古"]},         # 不完整地图
+    "D-18": {"type": "unique", "required_by": ["常州"]},           # 禁止照片作为附图
 
     # ── 差异型 ──
-    "F-4": {"type": "partial", "required_by": ["山西", "陕西", "内蒙古"]},   # 摘要不得照抄权要
-    "F-16": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古", "苏州"]},  # 不确定用语
-    "F-17": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古", "苏州"]},  # "例如"等表述
-    "F-18": {"type": "partial", "required_by": ["山西", "合肥"]},               # 不清确括号
-    "F-8": {"type": "partial", "required_by": ["吉林", "辽宁"]},                 # 禁止"其特征在于"
-    "F-30": {"type": "partial", "required_by": ["陕西"]},                       # 引证格式
-    "F-31": {"type": "partial", "required_by": ["合肥"]},                       # 引证公开出版物
-    "F-34": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古"]},     # 多余空行等
+    "AB-7": {"type": "partial", "required_by": ["山西", "陕西", "内蒙古"]},   # 摘要不得照抄权要
+    "C-8": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古", "苏州"]},  # 不确定用语
+    "C-9": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古", "苏州"]},  # "例如"等表述
+    "C-10": {"type": "partial", "required_by": ["山西", "合肥"]},               # 不清确括号
+    "S-9": {"type": "partial", "required_by": ["吉林", "辽宁"]},                # 禁止"其特征在于"
+    "S-17": {"type": "partial", "required_by": ["陕西"]},                       # 引证格式
+    "S-17b": {"type": "partial", "required_by": ["合肥"]},                      # 引证公开出版物
+    "S-13": {"type": "partial", "required_by": ["山西", "合肥", "内蒙古"]},     # 多余空行等
 }
 
 # ══════════════════════════════════════════════════════════════════
@@ -253,7 +253,7 @@ def get_quantitative_limit(rule_id: str, target_center: str) -> Optional[int]:
 @dataclass
 class ScanIssue:
     """单条扫描结果"""
-    rule_id: str               # 规则编号 F-1~F-101
+    rule_id: str               # 规则编号 AB-/AF-/C-/S-/D-
     severity: str              # must_fix / should_fix / confirm / suggestion
     location: str              # 定位（如"摘要第2段"、"权利要求3"）
     description: str           # 问题描述
@@ -339,36 +339,36 @@ class FormalityScanner:
         sec = self.parsed.sections['摘要']
         text = sec.full_text
 
-        # F-2: 摘要字数≤300字
-        self._check_F2(sec, text)
+        # AB-1: 摘要字数≤300字
+        self._check_AB1(sec, text)
 
-        # F-5: 摘要不得使用标题
-        self._check_F5(sec)
+        # AB-2: 摘要不得使用标题
+        self._check_AB2(sec)
 
-        # F-6: 摘要应以句号结尾
-        self._check_F6(sec, text)
+        # AB-3: 摘要应以句号结尾
+        self._check_AB3(sec, text)
 
-        # F-10: 专利类型用语检查
-        self._check_F10(sec, text, '摘要')
+        # AB-4: 专利类型用语检查
+        self._check_type_term(sec, text, '摘要')
 
-        # F-13: 摘要附图标记加括号
-        self._check_F13(sec, text)
+        # AB-5: 摘要附图标记加括号
+        self._check_AB5(sec, text)
 
-    def _check_F2(self, sec, text):
-        """F-2: 摘要字数≤300字"""
+    def _check_AB1(self, sec, text):
+        """AB-1: 摘要字数≤300字"""
         char_count = len(re.sub(r'\s', '', text))
         if char_count > 300:
             self._add_issue(
-                "F-2", "must_fix", "摘要",
+                "AB-1", "must_fix", "摘要",
                 f"摘要共{char_count}字，超过300字限制",
                 detail=f"摘要全文{char_count}字符（含标点，不含空白）",
                 suggestion="删减摘要内容至300字以内",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、内蒙古、西安、福建、常州",
             )
 
-    def _check_F5(self, sec):
-        """F-5: 摘要不得使用标题"""
-        verdict = get_center_verdict("F-5", self.target_center)
+    def _check_AB2(self, sec):
+        """AB-2: 摘要不得使用标题"""
+        verdict = get_center_verdict("AB-2", self.target_center)
         # suggestion 不再跳过：查出来标💡建议关注（计入补充提示区），见下方 severity 判定
 
         # 检查摘要section首段是否为标题行（短+居中+加粗）
@@ -377,7 +377,7 @@ class FormalityScanner:
             if len(first) <= 10 and first in ['摘要', '说明书摘要', '摘 要']:
                 severity = "must_fix" if verdict in ("mandatory", "strict_default") else "suggestion"
                 self._add_issue(
-                    "F-5", severity, "摘要",
+                    "AB-2", severity, "摘要",
                     "摘要部分使用了标题",
                     detail=f"首段为标题行：'{first}'",
                     suggestion="删除摘要标题，摘要正文直接开始",
@@ -385,21 +385,21 @@ class FormalityScanner:
                     dispute_note="仅山西中心要求摘要不得使用标题" if verdict != "mandatory" else "",
                 )
 
-    def _check_F6(self, sec, text):
-        """F-6: 摘要应以句号结尾（统一要求，所有中心适用 — 用户2026-06-10确认）"""
+    def _check_AB3(self, sec, text):
+        """AB-3: 摘要应以句号结尾（统一要求，所有中心适用 — 用户2026-06-10确认）"""
         # 去除尾部空白后检查最后一个字符
         stripped = text.rstrip()
         if stripped and stripped[-1] not in '。':
             self._add_issue(
-                "F-6", "must_fix", "摘要",
+                "AB-3", "must_fix", "摘要",
                 f"摘要未以句号结尾（最后字符：'{stripped[-1]}'）",
                 suggestion="在摘要末尾添加句号",
                 source_centers="统一要求（全部中心）",
                 center_verdict="normal",
             )
 
-    def _check_F10(self, sec, text, section_name):
-        """F-10/F-55: 专利类型用语检查"""
+    def _check_type_term(self, sec, text, section_name):
+        """AB-4/C-14/S-4: 专利类型用语检查"""
         if self.parsed.patent_type == '未知':
             return
 
@@ -427,7 +427,7 @@ class FormalityScanner:
                 actual_issues.append(m)
 
             if actual_issues:
-                rule = "F-10" if section_name == '摘要' else ("F-33" if section_name == '权利要求书' else "F-55")
+                rule = {"摘要": "AB-4", "权利要求书": "C-14", "说明书": "S-4"}[section_name]
                 self._add_issue(
                     rule,
                     "must_fix", section_name,
@@ -437,8 +437,8 @@ class FormalityScanner:
                     source_centers="山西、安徽、内蒙古、苏州" if section_name == '摘要' else "山西、陕西、安徽、合肥、西安、内蒙古、辽宁、苏州、天津",
                 )
 
-    def _check_F13(self, sec, text):
-        """F-13: 摘要附图标记加括号"""
+    def _check_AB5(self, sec, text):
+        """AB-5: 摘要附图标记加括号"""
         # 查找摘要中不在括号内的附图标记
         # 排除"图1"这种格式
         bare_marks = re.findall(r'(?<!（)\b(\d{2,4})\b(?!）|\()', text)
@@ -458,7 +458,7 @@ class FormalityScanner:
 
         if problematic:
             self._add_issue(
-                "F-13", "should_fix", "摘要",
+                "AB-5", "should_fix", "摘要",
                 f"摘要中的附图标记{problematic[:5]}未加括号",
                 suggestion="附图标记应加括号，如(101)、(201)",
                 source_centers="福建、内蒙古",
@@ -472,35 +472,35 @@ class FormalityScanner:
         sec = self.parsed.sections['权利要求书']
         text = sec.full_text
 
-        # F-17: 权利要求编号连续性
-        self._check_F17(sec, text)
+        # C-1: 权利要求编号连续性
+        self._check_C1(sec, text)
 
-        # F-18: 每项权利要求只有一个句号
-        self._check_F18(sec, text)
+        # C-2: 每项权利要求只有一个句号
+        self._check_C2(sec, text)
 
-        # F-19: 非择一引用/多引多
-        self._check_F19(sec, text)
+        # C-3: 非择一引用/多引多
+        self._check_C3(sec, text)
 
-        # F-20: 从属权利要求引用在前权利要求
-        self._check_F20(sec, text)
+        # C-4: 从属权利要求引用在前权利要求
+        self._check_C4(sec, text)
 
-        # F-22: 禁止"如说明书...所述"/"如图...所示"
-        self._check_F22(sec, text)
+        # C-5: 禁止"如说明书...所述"/"如图...所示"
+        self._check_C5(sec, text)
 
-        # F-23: 附图标记加括号
-        self._check_F23(sec, text)
+        # C-6: 附图标记加括号
+        self._check_C6(sec, text)
 
-        # F-29: 权利要求不得含插图
-        self._check_F29(sec)
+        # C-12: 权利要求不得含插图
+        self._check_C12(sec)
 
-        # F-10: 专利类型用语
-        self._check_F10(sec, text, '权利要求书')
+        # C-14: 专利类型用语
+        self._check_type_term(sec, text, '权利要求书')
 
-        # F-30: 涉及流程步骤编号次序
-        self._check_F30(sec, text)
+        # C-25: 涉及流程步骤编号次序
+        self._check_C25(sec, text)
 
-        # F-9: XML公式清晰度（检查OOXML公式是否存在）
-        self._check_F9(sec)
+        # C-13: XML公式清晰度（检查OOXML公式是否存在）
+        self._check_C13(sec)
 
     def _extract_claims(self, text: str) -> dict:
         """提取权利要求列表 {编号: 文本}"""
@@ -529,8 +529,8 @@ class FormalityScanner:
 
         return claims
 
-    def _check_F17(self, sec, text):
-        """F-17: 权利要求编号连续性"""
+    def _check_C1(self, sec, text):
+        """C-1: 权利要求编号连续性"""
         claims = self._extract_claims(text)
         if not claims:
             return
@@ -542,34 +542,34 @@ class FormalityScanner:
             missing = set(expected) - set(nums)
             if missing:
                 self._add_issue(
-                    "F-17", "must_fix", "权利要求书",
+                    "C-1", "must_fix", "权利要求书",
                     f"权利要求编号不连续，缺失编号：{sorted(missing)}",
                     suggestion="确保权利要求编号从1开始连续编号",
                     source_centers="山西、陕西、辽宁、安徽、合肥、内蒙古、西安、福建、常州",
                 )
 
-    def _check_F18(self, sec, text):
-        """F-18: 每项权利要求只有一个句号"""
+    def _check_C2(self, sec, text):
+        """C-2: 每项权利要求只有一个句号"""
         claims = self._extract_claims(text)
         for num, claim_text in claims.items():
             period_count = claim_text.count('。')
             if period_count == 0:
                 self._add_issue(
-                    "F-18", "must_fix", f"权利要求{num}",
+                    "C-2", "must_fix", f"权利要求{num}",
                     f"权利要求{num}缺少句号",
                     suggestion="每项权利要求应以句号结尾",
                     source_centers="山西、合肥、内蒙古、福建、常州",
                 )
             elif period_count > 1:
                 self._add_issue(
-                    "F-18", "should_fix", f"权利要求{num}",
+                    "C-2", "should_fix", f"权利要求{num}",
                     f"权利要求{num}包含{period_count}个句号（应为1个）",
                     suggestion="每项权利要求只能有一个句号，位于结尾",
                     source_centers="山西、合肥、内蒙古、福建、常州",
                 )
 
-    def _check_F19(self, sec, text):
-        """F-19: 非择一引用/多引多"""
+    def _check_C3(self, sec, text):
+        """C-3: 非择一引用/多引多"""
         claims = self._extract_claims(text)
         for num, claim_text in claims.items():
             # 提取引用的权利要求编号
@@ -582,7 +582,7 @@ class FormalityScanner:
             # 检查"和"/"及"（非择一引用）
             if re.search(r'[和及]', ref_str):
                 self._add_issue(
-                    "F-19", "must_fix", f"权利要求{num}",
+                    "C-3", "must_fix", f"权利要求{num}",
                     f"权利要求{num}使用了非择一引用（'{ref_str}'中含'和/及'）",
                     detail=f"引用内容：{ref_str}",
                     suggestion="从属权利要求引用多项时应以择一方式引用（用'或'或'1-N任一'）",
@@ -591,8 +591,8 @@ class FormalityScanner:
 
             # 检查"1-5"范围引用（多引多的基础判断较复杂，标记为B类）
 
-    def _check_F20(self, sec, text):
-        """F-20: 从属权利要求引用在前权利要求"""
+    def _check_C4(self, sec, text):
+        """C-4: 从属权利要求引用在前权利要求"""
         claims = self._extract_claims(text)
         for num, claim_text in claims.items():
             ref_match = self.CLAIM_REF_RE.search(claim_text)
@@ -607,34 +607,34 @@ class FormalityScanner:
             for rn in ref_nums:
                 if rn >= num:
                     self._add_issue(
-                        "F-20", "must_fix", f"权利要求{num}",
+                        "C-4", "must_fix", f"权利要求{num}",
                         f"权利要求{num}引用了权利要求{rn}（引用了自身或在后的权利要求）",
                         suggestion="从属权利要求只能引用在前的权利要求",
                         source_centers="陕西、辽宁",
                     )
 
-    def _check_F22(self, sec, text):
-        """F-22: 禁止"如说明书...所述"/"如图...所示" """
+    def _check_C5(self, sec, text):
+        """C-5: 禁止"如说明书...所述"/"如图...所示" """
         spec_matches = self.SPEC_REF_RE.findall(text)
         fig_matches = self.FIG_REF_RE.findall(text)
 
         if spec_matches:
             self._add_issue(
-                "F-22", "must_fix", "权利要求书",
+                "C-5", "must_fix", "权利要求书",
                 f"权利要求中出现了'如说明书……所述'类引用语（{len(spec_matches)}处）",
                 suggestion="权利要求中不应引用说明书内容",
                 source_centers="吉林、山西、陕西、辽宁、合肥、西安、内蒙古、常州",
             )
         if fig_matches:
             self._add_issue(
-                "F-22", "should_fix", "权利要求书",
+                "C-5", "should_fix", "权利要求书",
                 f"权利要求中出现了'如图……所示'类引用语（{len(fig_matches)}处）",
                 suggestion="权利要求中不应引用附图",
                 source_centers="吉林、山西、陕西、辽宁、合肥、西安、内蒙古、常州",
             )
 
-    def _check_F23(self, sec, text):
-        """F-23: 附图标记加括号（收窄正则，降低软件/算法案误报）"""
+    def _check_C6(self, sec, text):
+        """C-6: 附图标记加括号（收窄正则，降低软件/算法案误报）"""
         issues = []
         for m in re.finditer(r'[一-鿿](\d{2,4})(?![\d年月日号个倍%％米秒克瓦伏安兆℃°步版层位维次帧批轮])', text):
             num_str = m.group(1)
@@ -656,30 +656,30 @@ class FormalityScanner:
         if issues:
             unique_issues = list(dict.fromkeys(issues))
             self._add_issue(
-                "F-23", "should_fix", "权利要求书",
+                "C-6", "should_fix", "权利要求书",
                 f"权利要求中的附图标记{unique_issues[:8]}未加括号",
                 suggestion="附图标记应置于括号内，如'模块(101)'",
                 source_centers="山西、陕西、辽宁、吉林、西安、内蒙古、常州、苏州",
             )
 
-    def _check_F29(self, sec):
-        """F-29: 权利要求不得含插图"""
+    def _check_C12(self, sec):
+        """C-12: 权利要求不得含插图"""
         if sec.images:
             self._add_issue(
-                "F-29", "must_fix", "权利要求书",
+                "C-12", "must_fix", "权利要求书",
                 f"权利要求书中包含{len(sec.images)}张图片/插图",
                 suggestion="权利要求书中不应包含图片、流程图、方框图等插图",
                 source_centers="陕西、辽宁、湖北、内蒙古",
             )
 
-    def _check_F9(self, sec):
-        """F-9: 检查OOXML公式"""
+    def _check_C13(self, sec):
+        """C-13: 检查OOXML公式"""
         if sec.has_omath:
             # 有公式但无法自动检测是否"清晰"，标记为需人工确认
             pass  # 公式存在本身不是问题，是否清晰是B/C类
 
-    def _check_F30(self, sec, text):
-        """F-30: 涉及流程步骤的编号次序"""
+    def _check_C25(self, sec, text):
+        """C-25: 涉及流程步骤的编号次序"""
         # 提取步骤编号
         step_pattern = re.compile(r'步骤\s*(\d+)[\s\.．、：:]|S(\d+)[\s\.．、：:]')
         steps = []
@@ -703,46 +703,46 @@ class FormalityScanner:
         sec = self.parsed.sections['说明书']
         text = sec.full_text
 
-        # F-47: 发明名称一致性
-        self._check_F47()
+        # S-1: 发明名称一致性
+        self._check_S1()
 
-        # F-48: 名称字数检查
-        self._check_F48()
+        # S-2: 名称字数检查
+        self._check_S2()
 
-        # F-49: 说明书五部分完整性
-        self._check_F49(sec, text)
+        # S-3: 说明书五部分完整性
+        self._check_S3(sec, text)
 
-        # F-50: 小标题前无段落号
-        self._check_F50(sec, text)
+        # S-3b: 小标题前无段落号
+        self._check_S3b(sec, text)
 
-        # F-55: 禁止"如权利要求...所述"
-        self._check_F55(sec, text)
+        # S-5: 禁止"如权利要求...所述"
+        self._check_S5(sec, text)
 
-        # F-56: 专利类型用语检查
-        self._check_F10(sec, text, '说明书')
+        # S-4: 专利类型用语检查
+        self._check_type_term(sec, text, '说明书')
 
-        # F-58: 说明书文字部分无插图
-        self._check_F58(sec)
+        # S-6: 说明书文字部分无插图
+        self._check_S6(sec)
 
-        # F-59: 不得含带图的表格
-        self._check_F59(sec)
+        # S-6b: 不得含带图的表格
+        self._check_S6b(sec)
 
-        # F-61: 禁止"在此处键入"
-        self._check_F61(sec, text)
+        # S-8: 禁止"在此处键入"
+        self._check_S8(sec, text)
 
-        # F-62: 禁止QUOTE/本地路径
-        self._check_F62(sec, text)
+        # S-8b: 禁止QUOTE/本地路径
+        self._check_S8b(sec, text)
 
-        # F-64: 附图说明与附图对应
-        self._check_F64(sec, text)
+        # S-11: 附图说明与附图对应
+        self._check_S11(sec, text)
 
-        # F-67: 附图说明中的图号连续性
-        self._check_F67(sec, text)
+        # S-11b: 附图说明中的图号连续性
+        self._check_S11b(sec, text)
 
-        # F-63: 附图标记一致性（跨section，在cross_section中处理）
+        # S-12: 附图标记一致性（跨section，在cross_section中处理）
 
-    def _check_F47(self):
-        """F-47: 发明名称一致性"""
+    def _check_S1(self):
+        """S-1: 发明名称一致性"""
         names = set()
         for stype in ['摘要', '权利要求书', '说明书']:
             sec = self.parsed.sections.get(stype)
@@ -754,7 +754,7 @@ class FormalityScanner:
 
         if len(names) > 1:
             self._add_issue(
-                "F-47", "must_fix", "全文",
+                "S-1", "must_fix", "全文",
                 f"各部分发明名称不一致：{'; '.join(names)}",
                 suggestion="统一各部分的发明/实用新型名称",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、福建、北京、常州、苏州",
@@ -767,7 +767,7 @@ class FormalityScanner:
         - 说明书/摘要：首段通常就是发明名称（含"一种"，长度适中）
         - 权利要求书：不参与名称一致性比较（无独立名称段落）
         """
-        # 权利要求书不提取名称（F-47只比较说明书与摘要）
+        # 权利要求书不提取名称（S-1只比较说明书与摘要）
         if sec.section_type == '权利要求书':
             return ""
 
@@ -783,23 +783,23 @@ class FormalityScanner:
                 return p
         return ""
 
-    def _check_F48(self):
-        """F-48: 名称字数检查"""
+    def _check_S2(self):
+        """S-2: 名称字数检查"""
         if not self.parsed.invention_name:
             return
 
         name = self.parsed.invention_name
         char_count = len(re.sub(r'\s', '', name))
 
-        limit = get_quantitative_limit("F-48", self.target_center)
+        limit = get_quantitative_limit("S-2", self.target_center)
         if limit is None:
             limit = 25  # 默认最严格
 
         if char_count > limit:
-            verdict = get_center_verdict("F-48", self.target_center)
+            verdict = get_center_verdict("S-2", self.target_center)
             severity = "must_fix" if verdict in ("mandatory", "strict_default") else "suggestion"
             self._add_issue(
-                "F-48", severity, "说明书",
+                "S-2", severity, "说明书",
                 f"发明名称'{name[:20]}...'共{char_count}字，超过{limit}字限制",
                 detail=f"目标保护中心({self.target_center})的字数上限为{limit}字",
                 suggestion="精简发明名称" + (f"至{limit}字以内" if limit == 25 else ""),
@@ -807,8 +807,8 @@ class FormalityScanner:
                 dispute_note=f"陕西/合肥要求≤25字；苏州要求≤60字；当前按{limit}字判定",
             )
 
-    def _check_F49(self, sec, text):
-        """F-49: 说明书五部分完整性"""
+    def _check_S3(self, sec, text):
+        """S-3: 说明书五部分完整性"""
         from docx_parser import DocxSectionParser
         subheading_names = ['技术领域', '背景技术', '发明/实用新型内容', '附图说明', '具体实施方式']
         found = [False] * 5
@@ -823,14 +823,14 @@ class FormalityScanner:
         # "附图说明"在无附图的情况下可以缺失
         if missing and not (len(missing) == 1 and missing[0] == '附图说明'):
             self._add_issue(
-                "F-49", "must_fix", "说明书",
+                "S-3", "must_fix", "说明书",
                 f"说明书缺少以下部分：{'、'.join(missing)}",
                 suggestion="补充缺失的说明书部分",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、福建、北京、常州、苏州",
             )
 
-    def _check_F50(self, sec, text):
-        """F-50: 小标题前无段落号"""
+    def _check_S3b(self, sec, text):
+        """S-3b: 小标题前无段落号"""
         from docx_parser import DocxSectionParser
         subheading_patterns = DocxSectionParser.SPEC_SUBHEADINGS
 
@@ -844,36 +844,36 @@ class FormalityScanner:
                     prefix_match = re.match(r'^[\d]+[\.\s、．]', stripped)
                     if prefix_match:
                         self._add_issue(
-                            "F-50", "must_fix", "说明书",
+                            "S-3", "must_fix", "说明书",
                             f"小标题'{stripped}'前有段落号'{prefix_match.group()}'",
                             suggestion="说明书各小标题前不得添加段落号",
                             source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古",
                         )
                     break
 
-    def _check_F55(self, sec, text):
-        """F-55: 禁止"如权利要求...所述" """
+    def _check_S5(self, sec, text):
+        """S-5: 禁止"如权利要求...所述" """
         matches = re.findall(r'如\s*(?:权利要求|权\s*利\s*要\s*求)\s*[\d]+\s*所\s*述', text)
         if matches:
             self._add_issue(
-                "F-55", "must_fix", "说明书",
+                "S-5", "must_fix", "说明书",
                 f"说明书中出现'如权利要求……所述'类引用语（{len(matches)}处）",
                 suggestion="说明书中不应引用权利要求",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、常州",
             )
 
-    def _check_F58(self, sec):
-        """F-58: 说明书文字部分无插图"""
+    def _check_S6(self, sec):
+        """S-6: 说明书文字部分无插图"""
         if sec.images:
             self._add_issue(
-                "F-58", "must_fix", "说明书",
+                "S-6", "must_fix", "说明书",
                 f"说明书文字部分包含{len(sec.images)}张图片/插图",
                 suggestion="说明书文字部分不得含有插图，图片应放在说明书附图部分",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、天津",
             )
 
-    def _check_F59(self, sec):
-        """F-59: 不得含带图的表格"""
+    def _check_S6b(self, sec):
+        """S-6b: 不得含带图的表格"""
         # 检查表格cell是否含图片（简化检查）
         if sec.tables:
             for ti, table in enumerate(sec.tables):
@@ -882,36 +882,36 @@ class FormalityScanner:
                         # 简化：检查单元格文本中是否有图片占位符
                         if re.search(r'\[图片\]|\[图像\]|<img', cell):
                             self._add_issue(
-                                "F-59", "should_fix", "说明书",
+                                "S-6", "should_fix", "说明书",
                                 f"说明书中第{ti+1}个表格包含图片",
                                 suggestion="表格中不得含有图片",
                                 source_centers="陕西、安徽、合肥",
                             )
                             break
 
-    def _check_F61(self, sec, text):
-        """F-61: 禁止"在此处键入" """
+    def _check_S8(self, sec, text):
+        """S-8: 禁止"在此处键入" """
         matches = re.findall(r'在此处键入|Type\s+here', text, re.IGNORECASE)
         if matches:
             self._add_issue(
-                "F-61", "must_fix", "说明书",
+                "S-8", "must_fix", "说明书",
                 f"说明书中存在模板残留文字'在此处键入'（{len(matches)}处）",
                 suggestion="删除所有模板残留文字",
                 source_centers="陕西、合肥、内蒙古",
             )
 
-    def _check_F62(self, sec, text):
-        """F-62: 禁止QUOTE/本地路径"""
-        verdict = get_center_verdict("F-62", self.target_center)
+    def _check_S8b(self, sec, text):
+        """S-8b: 禁止QUOTE/本地路径"""
+        verdict = get_center_verdict("S-8", self.target_center)
         # suggestion 不再跳过：查出来标💡建议关注（计入补充提示区）
 
         matches = self.TEMPLATE_RESIDUE.findall(text)
-        # 过滤掉"在此处键入"（已在F-61检查）
+        # 过滤掉"在此处键入"（已在S-8检查）
         matches = [m for m in matches if '键入' not in m and 'Type' not in m]
         if matches:
             severity = "must_fix" if verdict in ("mandatory", "strict_default") else "suggestion"
             self._add_issue(
-                "F-62", severity, "说明书",
+                "S-8", severity, "说明书",
                 f"说明书中存在Word标记或本地路径（{len(matches)}处）",
                 detail=f"发现：{matches[:5]}",
                 suggestion="删除所有QUOTE标记、本地文件路径等残留内容",
@@ -919,8 +919,8 @@ class FormalityScanner:
                 dispute_note="仅合肥中心明确要求此项" if verdict != "mandatory" else "",
             )
 
-    def _check_F64(self, sec, text):
-        """F-64: 附图说明与附图对应"""
+    def _check_S11(self, sec, text):
+        """S-11: 附图说明与附图对应"""
         # 提取"图N"编号
         fig_in_spec = set()
         for m in re.finditer(r'图\s*(\d{1,3})', text):
@@ -940,21 +940,21 @@ class FormalityScanner:
 
                 if missing_in_drawings:
                     self._add_issue(
-                        "F-64", "must_fix", "说明书",
+                        "S-11", "must_fix", "说明书",
                         f"说明书中提及图{sorted(missing_in_drawings)}但附图中未找到",
                         suggestion="确保说明书附图说明中的每个图号都有对应附图",
                         source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、四川、常州、天津",
                     )
                 if extra_in_drawings:
                     self._add_issue(
-                        "F-64", "must_fix", "说明书附图",
+                        "S-11", "must_fix", "说明书附图",
                         f"附图中有图{sorted(extra_in_drawings)}但说明书中未提及",
                         suggestion="确保每个附图都在说明书中有说明",
                         source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、四川、常州、天津",
                     )
 
-    def _check_F67(self, sec, text):
-        """F-67: 附图说明中的图号连续性"""
+    def _check_S11b(self, sec, text):
+        """S-11b: 附图说明中的图号连续性"""
         fig_nums = []
         for m in re.finditer(r'图\s*(\d{1,3})', text):
             fig_nums.append(int(m.group(1)))
@@ -966,7 +966,7 @@ class FormalityScanner:
                 missing = set(expected) - set(unique_sorted)
                 if missing:
                     self._add_issue(
-                        "F-67", "must_fix", "说明书",
+                        "S-11", "must_fix", "说明书",
                         f"附图图号不连续，缺失：图{sorted(missing)}",
                         suggestion="附图应使用阿拉伯数字顺序编号",
                         source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、福建、湖北、常州、苏州",
@@ -980,24 +980,23 @@ class FormalityScanner:
         sec = self.parsed.sections['说明书附图']
         text = sec.full_text
 
-        # F-79: 附图编号连续性
-        self._check_F79(sec, text)
+        # D-1: 附图编号连续性
+        self._check_D1(sec, text)
 
-        # F-80: 图号后无多余文字注释
-        self._check_F80(sec, text)
+        # D-2: 图号后无多余文字注释
+        self._check_D2(sec, text)
 
-        # F-82: 附图说明与附图对应（在F-64中已处理跨section部分）
-        # F-83: 说明书vs附图标记双向核查
-        self._check_F83()
+        # D-3/D-4: 说明书vs附图标记双向核查
+        self._check_D3_D4()
 
-        # F-90: 附图中文词语检查
-        self._check_F90(sec, text)
+        # D-10: 附图中文词语检查
+        self._check_D10(sec, text)
 
-        # F-95/F-96: 多模态检测项（标记需人工确认）
-        self._check_F95_F96()
+        # D-14/D-15: 多模态检测项（标记需人工确认）
+        self._check_D14_D15()
 
-    def _check_F79(self, sec, text):
-        """F-79: 附图编号连续性"""
+    def _check_D1(self, sec, text):
+        """D-1: 附图编号连续性"""
         fig_nums = []
         for m in re.finditer(r'图\s*(\d{1,3})', text):
             fig_nums.append(int(m.group(1)))
@@ -1009,14 +1008,14 @@ class FormalityScanner:
                 missing = set(expected) - set(unique_sorted)
                 if missing:
                     self._add_issue(
-                        "F-79", "must_fix", "说明书附图",
+                        "D-1", "must_fix", "说明书附图",
                         f"附图图号不连续，缺失：图{sorted(missing)}",
                         suggestion="附图应使用阿拉伯数字顺序编号",
                         source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、福建、湖北、常州、苏州",
                     )
 
-    def _check_F80(self, sec, text):
-        """F-80: 图号后无多余文字注释"""
+    def _check_D2(self, sec, text):
+        """D-2: 图号后无多余文字注释"""
         # 检查"图1"后面是否有多余的非标准文字
         for line in text.split('\n'):
             stripped = line.strip()
@@ -1027,14 +1026,14 @@ class FormalityScanner:
                 # 不允许"图1 图1的说明..."这种重复
                 if after and re.match(r'^图\s*\d+', after):
                     self._add_issue(
-                        "F-80", "should_fix", "说明书附图",
+                        "D-2", "should_fix", "说明书附图",
                         f"附图编号'{stripped[:20]}'后可能有多余注释",
                         suggestion="图号后不应有多余的文字注释或符号",
                         source_centers="吉林、山西、陕西、安徽、合肥、西安、内蒙古",
                     )
 
-    def _check_F83(self):
-        """F-83: 说明书vs附图标记双向核查"""
+    def _check_D3_D4(self):
+        """D-3/D-4: 说明书vs附图标记双向核查"""
         spec_sec = self.parsed.sections.get('说明书')
         fig_sec = self.parsed.sections.get('说明书附图')
 
@@ -1051,21 +1050,21 @@ class FormalityScanner:
 
         if spec_only:
             self._add_issue(
-                "F-83", "should_fix", "说明书",
+                "D-3", "should_fix", "说明书",
                 f"说明书中提及的附图标记{sorted(list(spec_only)[:10], key=lambda x: int(x) if x.isdigit() else 0)}在附图中未出现",
                 suggestion="确保说明书中提及的所有附图标记在附图中都有对应",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、四川",
             )
         if fig_only:
             self._add_issue(
-                "F-83", "should_fix", "说明书附图",
+                "D-4", "should_fix", "说明书附图",
                 f"附图中的标记{sorted(list(fig_only)[:10], key=lambda x: int(x) if x.isdigit() else 0)}在说明书中未提及",
                 suggestion="确保附图中的所有标记在说明书中都有说明",
                 source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古、四川",
             )
 
-    def _check_F90(self, sec, text):
-        """F-90: 附图中词语使用中文"""
+    def _check_D10(self, sec, text):
+        """D-10: 附图中词语使用中文"""
         # 检查附图文本中的纯外文词（排除常见缩写和化学符号）
         foreign_words = re.findall(r'[A-Za-z]{3,}(?:\s[A-Za-z]+)*', text)
         # 过滤掉常见的技术缩写
@@ -1079,30 +1078,30 @@ class FormalityScanner:
         if problematic:
             unique = list(dict.fromkeys(problematic))[:10]
             self._add_issue(
-                "F-90", "should_fix", "说明书附图",
+                "D-10", "should_fix", "说明书附图",
                 f"附图中可能存在未翻译的外文词语：{unique}",
                 suggestion="附图中的词语应使用中文，必要时可在括号中注明原文",
                 source_centers="陕西、辽宁、山西、西安",
             )
 
-    def _check_F95_F96(self):
-        """F-95/F-96: 多模态检测项（标记需人工确认）"""
+    def _check_D14_D15(self):
+        """D-14/D-15: 多模态检测项（标记需人工确认）"""
         fig_sec = self.parsed.sections.get('说明书附图')
         if fig_sec and fig_sec.images:
             # 有图片但无法自动检测人脸/二维码，标记为需人工确认
-            verdict_95 = get_center_verdict("F-95", self.target_center)
+            verdict_95 = get_center_verdict("D-14", self.target_center)
             if verdict_95 in ("mandatory", "strict_default"):
                 self._add_issue(
-                    "F-95", "confirm", "说明书附图",
+                    "D-14", "confirm", "说明书附图",
                     "请人工确认附图中是否含有清晰人脸图像（当前无法自动检测）",
                     source_centers="内蒙古",
                     dispute_note="仅内蒙古中心明确要求此项" if verdict_95 != "mandatory" else "",
                 )
 
-            verdict_96 = get_center_verdict("F-96", self.target_center)
+            verdict_96 = get_center_verdict("D-15", self.target_center)
             if verdict_96 in ("mandatory", "strict_default"):
                 self._add_issue(
-                    "F-96", "confirm", "说明书附图",
+                    "D-15", "confirm", "说明书附图",
                     "请人工确认附图中是否含有二维码、条形码（当前无法自动检测）",
                     source_centers="内蒙古",
                     dispute_note="仅内蒙古中心明确要求此项" if verdict_96 != "mandatory" else "",
@@ -1114,14 +1113,14 @@ class FormalityScanner:
 
     def _scan_cross_section(self):
         """跨section检查"""
-        # F-24/F-25: 附图标记一致性（权要vs说明书vs附图）
-        self._check_F24_F25()
+        # C-29: 附图标记一致性（权要vs说明书vs附图）
+        self._check_C29()
 
-        # F-65: 具体实施方式中附图标记不加括号
-        self._check_F65()
+        # S-29: 具体实施方式中附图标记不加括号
+        self._check_S29()
 
-    def _check_F24_F25(self):
-        """F-24/F-25: 附图标记一致性"""
+    def _check_C29(self):
+        """C-29: 附图标记一致性"""
         claims_sec = self.parsed.sections.get('权利要求书')
         spec_sec = self.parsed.sections.get('说明书')
         fig_sec = self.parsed.sections.get('说明书附图')
@@ -1137,7 +1136,7 @@ class FormalityScanner:
             claims_only = claims_marks - spec_marks
             if claims_only:
                 self._add_issue(
-                    "F-25", "should_fix", "权利要求书",
+                    "C-29", "should_fix", "权利要求书",
                     f"权利要求中的附图标记{sorted(list(claims_only)[:8])}在说明书中未出现",
                     suggestion="确保权利要求中的附图标记与说明书一致",
                     source_centers="山西、陕西、安徽、西安、内蒙古、常州",
@@ -1149,14 +1148,14 @@ class FormalityScanner:
             claims_only_fig = claims_marks - fig_marks
             if claims_only_fig:
                 self._add_issue(
-                    "F-25", "should_fix", "权利要求书",
+                    "C-29", "should_fix", "权利要求书",
                     f"权利要求中的附图标记{sorted(list(claims_only_fig)[:8])}在附图中未出现",
                     suggestion="确保权利要求中的附图标记与附图一致",
                     source_centers="山西、陕西、安徽、西安、内蒙古、常州",
                 )
 
-    def _check_F65(self):
-        """F-65: 具体实施方式中附图标记不加括号"""
+    def _check_S29(self):
+        """S-29: 具体实施方式中附图标记不加括号"""
         spec_sec = self.parsed.sections.get('说明书')
         if not spec_sec:
             return
@@ -1180,7 +1179,7 @@ class FormalityScanner:
         if bracketed_marks:
             marks = [m[0] or m[1] for m in bracketed_marks]
             self._add_issue(
-                "F-65", "should_fix", "说明书·具体实施方式",
+                "S-29", "should_fix", "说明书·具体实施方式",
                 f"具体实施方式中的附图标记{marks[:8]}加了括号（应为不加括号）",
                 suggestion="具体实施方式中的附图标记放在相应技术名称后面，不加括号",
                 source_centers="山西、陕西、常州",
