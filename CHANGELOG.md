@@ -5,6 +5,21 @@
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.4.0] - 2026-06-12
+
+### Added
+- **新增 `patent-ocr-mineru`**：专利场景 MinerU OCR 解析 skill。支持精准 API / agent / local 三路径，专利章节识别、权要原文优先、附图标号核查、材料配方场景专项标注；作撰写/审核类 skill 的输入预处理。
+- `global-dossier` 新增 `scripts/dossier_regression_check.py` 回归测试脚本。
+- `patent-formality-review` 新增 `references/script-issue-review-prompt.md`（脚本命中项人工复核提示词）和 `tests/` 目录。
+
+### Changed
+- `patent-search`：`xhr_search.py` 与回归测试脚本修订。
+- `global-dossier`：平台说明与下载脚本更新。
+- `invention-point-extraction`：SKILL.md、参考文档、脚本优化。
+- `claims-feature-decomposition`：推理参考文档与脚本优化。
+- `disclosure-review`：审核清单与电学领域规则更新。
+- `patent-formality-review`：`formality_scanner.py` 与 SKILL.md/README 修订。
+
 ## [1.3.0] - 2026-06-12
 
 ### Changed
@@ -40,6 +55,7 @@
 ### Changed
 - 交付方式通用化：移除写死的微信 `send_message`+`MEDIA:` 交付指令，改为不绑定特定通道的"生成后交付/输出文件给用户"（`global-dossier`、`patent-formality-review`）。
 
+[1.4.0]: https://github.com/MrEgg2021/patent-skills/releases/tag/v1.4.0
 [1.3.0]: https://github.com/MrEgg2021/patent-skills/releases/tag/v1.3.0
 [1.2.0]: https://github.com/MrEgg2021/patent-skills/releases/tag/v1.2.0
 [1.0.1]: https://github.com/MrEgg2021/patent-skills/releases/tag/v1.0.1
