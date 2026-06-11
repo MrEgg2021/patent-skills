@@ -18,6 +18,15 @@ EXPECTED_COLUMNS = [
 ]
 
 
+def read_text(path: Path) -> str:
+    for encoding in ("utf-8-sig", "utf-8", "gb18030", "utf-16"):
+        try:
+            return path.read_text(encoding=encoding)
+        except UnicodeError:
+            continue
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Convert claims-feature-decomposition JSON to xlsx"
@@ -28,8 +37,7 @@ def main() -> None:
     args = parser.parse_args()
 
     input_path = Path(args.input)
-    with open(input_path, encoding="utf-8") as f:
-        raw = f.read()
+    raw = read_text(input_path)
 
     # Strip markdown code blocks if present
     raw = raw.strip()
