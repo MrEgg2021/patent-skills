@@ -32,7 +32,10 @@ PAGE_TIMEOUT = 30000
 def wait_angular(page):
     """Wait for Angular search form to be ready. Returns bool."""
     for attempt in range(20):
-        if page.evaluate("!!document.getElementById('office') && document.getElementById('office').options.length >= 6"):
+        if page.evaluate("""() => {
+            const office = document.getElementById('country') || document.getElementById('office');
+            return !!office && office.options.length >= 6;
+        }"""):
             return True
         time.sleep(3)
         if attempt == 10:
@@ -49,8 +52,9 @@ def angular_search(page, office, type_idx, query_str):
 
     page.evaluate("""([o, t, q]) => {
         const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-        document.getElementById('office').selectedIndex = o;
-        document.getElementById('office').dispatchEvent(new Event('change', {bubbles: true}));
+        const office = document.getElementById('country') || document.getElementById('office');
+        office.selectedIndex = o;
+        office.dispatchEvent(new Event('change', {bubbles: true}));
         document.getElementById('type').selectedIndex = t;
         document.getElementById('type').dispatchEvent(new Event('change', {bubbles: true}));
         const el = document.getElementById('query');
@@ -62,9 +66,9 @@ def angular_search(page, office, type_idx, query_str):
     time.sleep(2)
 
     try:
-        page.click("button:has-text('click to search patent family')", timeout=5000)
+        page.click("button[name='search']", timeout=5000)
         time.sleep(12)
-    except:
+    except Exception:
         return False
     return '/home' not in page.url
 

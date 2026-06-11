@@ -12,11 +12,13 @@
 ### 关键元素
 
 ```html
-<select id="office">   <!-- 0=US, 1=CN, 2=EP, 3=KR, 4=JP, 5=WIPO -->
+<select id="country">  <!-- 0=US, 1=CN, 2=EP, 3=KR, 4=JP, 5=WIPO, 6=CASE -->
 <select id="type">     <!-- 0=Application, 1=Pre-grant Pub, 2=Patent -->
 <input id="query">     <!-- 号码输入 -->
 <button name="search"> <!-- 搜索按钮 -->
 ```
+
+> 2026-06-12 实测：USPTO 前端已将原 `id="office"` 改为 `id="country"`。脚本应优先使用 `#country`，保留 `#office` 作为旧页面回退。
 
 ### CN 搜索格式
 - 公开号：纯数字（如 `116621800`，不带 `CN` 前缀）
@@ -42,6 +44,10 @@ const setter = Object.getOwnPropertyDescriptor(
 ).set;
 
 // 1. 设置 select
+const officeSelect = document.getElementById('country') || document.getElementById('office');
+officeSelect.selectedIndex = TARGET_OFFICE_INDEX;
+officeSelect.dispatchEvent(new Event('change', {bubbles: true}));
+
 const typeSelect = document.getElementById('type');
 typeSelect.selectedIndex = TARGET_INDEX;
 typeSelect.dispatchEvent(new Event('change', {bubbles: true}));

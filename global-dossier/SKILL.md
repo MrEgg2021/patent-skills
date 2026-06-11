@@ -44,9 +44,9 @@ metadata:
 
 ### 调用方式
 ```bash
-python3 scripts/dossier_download.py --number CN116621800B --mode single
-python3 scripts/dossier_download.py --number US11922587 --mode single
-python3 scripts/dossier_download.py --number 202310575536 --mode single  # 也支持申请号
+python scripts/dossier_download.py --number CN116621800B --mode single
+python scripts/dossier_download.py --number US11922587 --mode single
+python scripts/dossier_download.py --number 202310575536 --mode single  # 也支持申请号
 ```
 
 ### 工作流程
@@ -66,8 +66,8 @@ python3 scripts/dossier_download.py --number 202310575536 --mode single  # 也�
 
 ### 调用方式
 ```bash
-python3 scripts/dossier_download.py --number US11922587 --mode family
-python3 scripts/dossier_download.py --number CN116621800B --mode family
+python scripts/dossier_download.py --number US11922587 --mode family
+python scripts/dossier_download.py --number CN116621800B --mode family
 ```
 
 ### 工作流程
