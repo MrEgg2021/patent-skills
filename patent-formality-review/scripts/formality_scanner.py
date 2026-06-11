@@ -262,6 +262,12 @@ class ScanIssue:
     source_centers: str = ""   # 提出中心
     dispute_note: str = ""     # 分歧说明（为空表示无分歧）
     center_verdict: str = "normal"  # 中心判定模式
+    review_policy: str = "script_final"  # script_final / llm_required / official_preview_required / manual_required
+    surface: str = "word_docx"           # word_docx / official_pdf_preview / submission_package
+    confidence: str = "high"             # high / medium / low
+    matched_text: str = ""               # 脚本命中的原文片段
+    context: str = ""                    # 命中点前后上下文
+    candidate_reason: str = ""           # 候选问题进入复核的原因
 
 
 @dataclass
@@ -439,29 +445,29 @@ class FormalityScanner:
 
     def _check_AB5(self, sec, text):
         """AB-5: 摘要附图标记加括号"""
-        # 查找摘要中不在括号内的附图标记
-        # 排除"图1"这种格式
-        bare_marks = re.findall(r'(?<!（)\b(\d{2,4})\b(?!）|\()', text)
-        # 过滤掉常见的非附图标记
-        problematic = []
-        for m in bare_marks:
+        # 裸2-4位数字误报率高，只作为LLM复核候选。
+        for match in re.finditer(r'(?<![（(])(\d{2,4})(?![）)\d])', text):
+            num_str = match.group(1)
             try:
-                num = int(m)
-                if 10 <= num <= 9999:  # 附图标记范围
-                    # 检查上下文是否为"图N"格式
-                    idx = text.find(m)
-                    if idx > 0 and text[idx-1] == '图':
-                        continue
-                    problematic.append(m)
+                num = int(num_str)
             except ValueError:
-                pass
+                continue
 
-        if problematic:
+            if not 10 <= num <= 9999:
+                continue
+            if self._is_non_reference_number_context(text, match.start(1), match.end(1)):
+                continue
+
             self._add_issue(
                 "AB-5", "should_fix", "摘要",
-                f"摘要中的附图标记{problematic[:5]}未加括号",
+                f"摘要中的数字'{num_str}'疑似未加括号的附图标记",
                 suggestion="附图标记应加括号，如(101)、(201)",
                 source_centers="福建、内蒙古",
+                review_policy="llm_required",
+                confidence="medium",
+                matched_text=num_str,
+                context=self._get_context(text, match.start(1), match.end(1)),
+                candidate_reason="摘要中出现裸2-4位数字，可能是未加括号的附图标记；需结合上下文判断是否为普通数值。",
             )
 
     # ──────────────────────────────────────────
@@ -635,31 +641,34 @@ class FormalityScanner:
 
     def _check_C6(self, sec, text):
         """C-6: 附图标记加括号（收窄正则，降低软件/算法案误报）"""
-        issues = []
-        for m in re.finditer(r'[一-鿿](\d{2,4})(?![\d年月日号个倍%％米秒克瓦伏安兆℃°步版层位维次帧批轮])', text):
-            num_str = m.group(1)
-            # 排除步骤编号/版本号/层数等常见非标记上下文
-            pre_start = max(0, m.start() - 4)
-            pre_ctx = text[pre_start:m.start() + 1]
-            if re.search(r'[S第步层版]$|实施例|阈值|步骤|第\d', pre_ctx):
+        for match in re.finditer(r'(?<![（(])([\u4e00-\u9fff])(\d{2,4})(?![\d）)])', text):
+            prefix = match.group(1)
+            num_str = match.group(2)
+            number_start = match.start(2)
+            number_end = match.end(2)
+
+            if prefix == '图':
                 continue
+            if self._is_non_reference_number_context(text, number_start, number_end):
+                continue
+
             try:
                 num = int(num_str)
-                if 10 <= num <= 9999:
-                    start_pos = m.start()
-                    if start_pos > 0 and text[start_pos - 1] in '（(':
-                        continue
-                    issues.append(num_str)
             except ValueError:
-                pass
+                continue
+            if not 10 <= num <= 9999:
+                continue
 
-        if issues:
-            unique_issues = list(dict.fromkeys(issues))
             self._add_issue(
                 "C-6", "should_fix", "权利要求书",
-                f"权利要求中的附图标记{unique_issues[:8]}未加括号",
+                f"权利要求中的数字'{num_str}'疑似未加括号的附图标记",
                 suggestion="附图标记应置于括号内，如'模块(101)'",
                 source_centers="山西、陕西、辽宁、吉林、西安、内蒙古、常州、苏州",
+                review_policy="llm_required",
+                confidence="medium",
+                matched_text=num_str,
+                context=self._get_context(text, number_start, number_end),
+                candidate_reason="权利要求中出现紧跟中文技术名称的裸2-4位数字，可能是未加括号的附图标记；需排除数值范围、单位、步骤编号等普通数字。",
             )
 
     def _check_C12(self, sec):
@@ -815,7 +824,7 @@ class FormalityScanner:
 
         for i, pattern in enumerate(DocxSectionParser.SPEC_SUBHEADINGS):
             for line in text.split('\n'):
-                if pattern.match(line.strip()):
+                if pattern.match(self._strip_subheading_prefix(line.strip())):
                     found[i] = True
                     break
 
@@ -839,15 +848,22 @@ class FormalityScanner:
             if not stripped:
                 continue
             for pattern in subheading_patterns:
-                if pattern.match(stripped):
+                normalized = self._strip_subheading_prefix(stripped)
+                if pattern.match(normalized):
                     # 检查是否有段落号前缀
                     prefix_match = re.match(r'^[\d]+[\.\s、．]', stripped)
                     if prefix_match:
                         self._add_issue(
-                            "S-3", "must_fix", "说明书",
-                            f"小标题'{stripped}'前有段落号'{prefix_match.group()}'",
-                            suggestion="说明书各小标题前不得添加段落号",
+                            "S-3", "confirm", "说明书",
+                            f"小标题'{stripped}'前有段落号'{prefix_match.group()}'，需以官方客户端PDF预览为准",
+                            suggestion="先保留Word初稿文本基础，提交官方客户端转档后核对PDF预览中的小标题格式",
                             source_centers="吉林、山西、陕西、辽宁、安徽、合肥、西安、内蒙古",
+                            review_policy="official_preview_required",
+                            surface="official_pdf_preview",
+                            confidence="medium",
+                            matched_text=stripped,
+                            context=self._get_context(text, text.find(line), text.find(line) + len(line)) if line in text else stripped,
+                            candidate_reason="Word初稿小标题前存在段号，但该类格式可能由官方客户端转档后重新生成，不能仅凭Word初稿定为最终不合格。",
                         )
                     break
 
@@ -1191,7 +1207,10 @@ class FormalityScanner:
 
     def _add_issue(self, rule_id, severity, location, description, *,
                    detail="", suggestion="", source_centers="",
-                   dispute_note="", center_verdict=None):
+                   dispute_note="", center_verdict=None,
+                   review_policy="script_final", surface="word_docx",
+                   confidence="high", matched_text="", context="",
+                   candidate_reason=""):
         """添加一条扫描结果"""
         if center_verdict is None:
             center_verdict = get_center_verdict(rule_id, self.target_center)
@@ -1206,16 +1225,61 @@ class FormalityScanner:
             source_centers=source_centers,
             dispute_note=dispute_note,
             center_verdict=center_verdict,
+            review_policy=review_policy,
+            surface=surface,
+            confidence=confidence,
+            matched_text=matched_text,
+            context=context,
+            candidate_reason=candidate_reason,
         ))
+
+    def _get_context(self, text: str, start: int, end: int, window: int = 30) -> str:
+        """返回命中点前后上下文，供LLM复核使用。"""
+        if start < 0 or end < 0:
+            return ""
+        left = max(0, start - window)
+        right = min(len(text), end + window)
+        return text[left:right].replace('\n', ' ')
+
+    def _strip_subheading_prefix(self, text: str) -> str:
+        """去掉说明书小标题前的Word段号，用于完整性识别。"""
+        return re.sub(r'^\s*\d+[\.\s、．]+', '', text).strip()
+
+    def _is_non_reference_number_context(self, text: str, start: int, end: int) -> bool:
+        """过滤明显不是附图标记的数字上下文。"""
+        prev_char = text[start - 1] if start > 0 else ""
+        next_char = text[end] if end < len(text) else ""
+        pre_ctx = text[max(0, start - 8):start]
+        post_ctx = text[end:min(len(text), end + 8)]
+
+        if prev_char in "图第S-~～—至到" or next_char in "-~～—至到":
+            return True
+        if next_char in "年月日号个倍%％米秒克瓦伏安兆℃°步版层位维次帧批轮页张项条段句字节点级":
+            return True
+        if re.search(r'(步骤|实施例|阈值|数值|比例|温度|角度|距离|时间|速度|频率|第)\s*$', pre_ctx):
+            return True
+        if re.match(r'\s*(%|％|℃|°|mm|cm|m|ms|s|kg|g|V|A|W|Hz|kHz|MHz|GHz|个|次|步|层|帧)', post_ctx):
+            return True
+        if re.search(r'(19|20)\d{2}', text[start:end]) and next_char == '年':
+            return True
+        return False
 
     def _build_result(self) -> ScanResult:
         """构建扫描结果"""
         # 统计
         total = len(self.issues)
+        final_issues = [i for i in self.issues if i.review_policy == "script_final"]
         must_fix = sum(1 for i in self.issues if i.severity == "must_fix")
         should_fix = sum(1 for i in self.issues if i.severity == "should_fix")
+        final_must_fix = sum(1 for i in final_issues if i.severity == "must_fix")
+        final_should_fix = sum(1 for i in final_issues if i.severity == "should_fix")
+        final_manual = sum(1 for i in final_issues if i.severity in ("confirm", "suggestion"))
         confirm = sum(1 for i in self.issues if i.severity == "confirm")
         suggestion = sum(1 for i in self.issues if i.severity == "suggestion")
+        script_final_count = sum(1 for i in self.issues if i.review_policy == "script_final")
+        llm_required_count = sum(1 for i in self.issues if i.review_policy == "llm_required")
+        official_preview_required_count = sum(1 for i in self.issues if i.review_policy == "official_preview_required")
+        manual_required_count = sum(1 for i in self.issues if i.review_policy == "manual_required")
 
         section_detection = {}
         for stype in ['摘要', '权利要求书', '说明书', '说明书附图']:
@@ -1239,12 +1303,16 @@ class FormalityScanner:
             summary={
                 "total_a_rules": 36,
                 "a_rules_passed": 36 - total,
-                "a_rules_failed": must_fix + should_fix,
-                "a_rules_manual": confirm + suggestion,
+                "a_rules_failed": final_must_fix + final_should_fix,
+                "a_rules_manual": final_manual + llm_required_count + official_preview_required_count + manual_required_count,
                 "must_fix": must_fix,
                 "should_fix": should_fix,
                 "confirm": confirm,
                 "suggestion": suggestion,
+                "script_final_count": script_final_count,
+                "llm_required_count": llm_required_count,
+                "official_preview_required_count": official_preview_required_count,
+                "manual_required_count": manual_required_count,
             },
             issues=[asdict(i) for i in self.issues],
             warnings=self.parsed.warnings,
