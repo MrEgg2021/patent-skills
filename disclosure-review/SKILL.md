@@ -129,14 +129,34 @@ Rule D.X [规则名称] — 🔴/🔵/✅
 | Part A | 交底书整体 / 章节名 / 材料范围 |
 | Part B | 段落号、页码或原文引用 |
 
+## 报告输出
+
+审核完成后，**必须**用 `scripts/render_review_docx.py` 生成 Word 报告交付用户。
+
+1. 将审核结果整理为结构化 JSON（结构见 `references/review_report_schema.md`），写入临时文件
+2. 运行脚本：
+
+```bash
+python scripts/render_review_docx.py --data report.json --output "{发明名称}_交底书审核报告.docx"
+```
+
+3. 生成后立即交付用户，不留本地路径让用户自行取用
+
+脚本输出三段式报告：领域识别与整体评估 + 逐条审查记录（表格）+ 发明人补充确认清单（Part A/B）。级别字段（🔴/🔵/✅）自动上色，缺失字段优雅跳过。脚本已封装 python-docx 的中文字体、表格边框、表头底色等细节，无需手写生成代码。
+
+> 用 python-docx 而非 pandoc（表格无边框）或 docx-js（中文书名号/引号触发 JS 语法错误）。
+
 ## 文件结构
 
 ```text
 disclosure-review/
 ├── SKILL.md
-└── references/
-    ├── disclosure_checklist.md
-    ├── domain_electrical.md
-    ├── domain_mechanical.md
-    └── domain_process.md
+├── references/
+│   ├── disclosure_checklist.md
+│   ├── domain_electrical.md
+│   ├── domain_mechanical.md
+│   ├── domain_process.md
+│   └── review_report_schema.md
+└── scripts/
+    └── render_review_docx.py
 ```
